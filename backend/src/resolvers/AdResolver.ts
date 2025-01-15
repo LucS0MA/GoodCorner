@@ -1,5 +1,6 @@
 import AdInput from "../inputs/AdInput";
 import { Ad } from "../entities/Ad";
+import { User } from "../entities/User";
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import UpdateAdInput from "../inputs/UpdateAdInput";
 import { FindManyOptions, Like } from "typeorm";
@@ -49,8 +50,12 @@ class AdResolver {
   @Mutation(() => Ad)
   async createNewAd(@Arg("data") newAdData: AdInput, @Ctx() context: any) {
     console.log("context of create new ad mutation", context);
+    const userFromContext = await User.findOneByOrFail({
+      email: context.email,
+    });
     const newAdToSave = Ad.create({
       ...newAdData,
+      user: userFromContext,
     });
     const result = await newAdToSave.save();
     return result;

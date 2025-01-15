@@ -25,11 +25,11 @@ export type Ad = {
   description: Scalars['String']['output'];
   id: Scalars['Float']['output'];
   location: Scalars['String']['output'];
-  owner: Scalars['String']['output'];
   pictures: Array<Picture>;
   price: Scalars['Float']['output'];
   tags: Array<Tag>;
   title: Scalars['String']['output'];
+  user: User;
 };
 
 export type AdInput = {
@@ -37,7 +37,6 @@ export type AdInput = {
   createdAt: Scalars['DateTimeISO']['input'];
   description: Scalars['String']['input'];
   location: Scalars['String']['input'];
-  owner: Scalars['String']['input'];
   pictures?: InputMaybe<Array<PictureInput>>;
   price: Scalars['Float']['input'];
   tags?: InputMaybe<Array<TagInput>>;
@@ -50,12 +49,20 @@ export type Category = {
   title: Scalars['String']['output'];
 };
 
+export type CategoryInput = {
+  title: Scalars['String']['input'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createNewAd: Ad;
+  createNewCategory: Category;
+  createNewTag: Tag;
   deleteAd: Scalars['String']['output'];
+  deleteCategory: Scalars['String']['output'];
   register: Scalars['String']['output'];
   updateAd: Scalars['String']['output'];
+  updateCategory: Scalars['String']['output'];
 };
 
 
@@ -64,7 +71,22 @@ export type MutationCreateNewAdArgs = {
 };
 
 
+export type MutationCreateNewCategoryArgs = {
+  data: CategoryInput;
+};
+
+
+export type MutationCreateNewTagArgs = {
+  data: TagInputs;
+};
+
+
 export type MutationDeleteAdArgs = {
+  id: Scalars['Float']['input'];
+};
+
+
+export type MutationDeleteCategoryArgs = {
   id: Scalars['Float']['input'];
 };
 
@@ -76,6 +98,11 @@ export type MutationRegisterArgs = {
 
 export type MutationUpdateAdArgs = {
   data: UpdateAdInput;
+};
+
+
+export type MutationUpdateCategoryArgs = {
+  data: UpDateCategoryInput;
 };
 
 export type Picture = {
@@ -94,6 +121,8 @@ export type Query = {
   getAllAds: Array<Ad>;
   getAllCategories: Array<Category>;
   getAllTags: Array<Tag>;
+  getCategoryById: Category;
+  getTagById: Tag;
   login: Scalars['String']['output'];
 };
 
@@ -106,6 +135,16 @@ export type QueryGetAdByIdArgs = {
 export type QueryGetAllAdsArgs = {
   category?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetCategoryByIdArgs = {
+  id: Scalars['Float']['input'];
+};
+
+
+export type QueryGetTagByIdArgs = {
+  id: Scalars['Float']['input'];
 };
 
 
@@ -123,6 +162,16 @@ export type TagInput = {
   id: Scalars['Float']['input'];
 };
 
+export type TagInputs = {
+  id: Scalars['Float']['input'];
+  name: Scalars['String']['input'];
+};
+
+export type UpDateCategoryInput = {
+  id: Scalars['Float']['input'];
+  title: Scalars['String']['input'];
+};
+
 export type UpdateAdInput = {
   category?: InputMaybe<Scalars['ID']['input']>;
   createdAt?: InputMaybe<Scalars['DateTimeISO']['input']>;
@@ -134,6 +183,12 @@ export type UpdateAdInput = {
   price?: InputMaybe<Scalars['Float']['input']>;
   tags?: InputMaybe<Array<TagInput>>;
   title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type User = {
+  __typename?: 'User';
+  ads: Array<Ad>;
+  email: Scalars['String']['output'];
 };
 
 export type UserInput = {
@@ -178,14 +233,14 @@ export type GetAllAdsQueryVariables = Exact<{
 }>;
 
 
-export type GetAllAdsQuery = { __typename?: 'Query', getAllAds: Array<{ __typename?: 'Ad', id: number, title: string, description: string, owner: string, price: number, location: string, createdAt: any, category: { __typename?: 'Category', id: number, title: string }, pictures: Array<{ __typename?: 'Picture', id: number, url: string }>, tags: Array<{ __typename?: 'Tag', id: number, name: string }> }> };
+export type GetAllAdsQuery = { __typename?: 'Query', getAllAds: Array<{ __typename?: 'Ad', id: number, title: string, description: string, price: number, location: string, createdAt: any, category: { __typename?: 'Category', id: number, title: string }, pictures: Array<{ __typename?: 'Picture', id: number, url: string }>, tags: Array<{ __typename?: 'Tag', id: number, name: string }> }> };
 
 export type GetAdByIdQueryVariables = Exact<{
   getAdByIdId: Scalars['Float']['input'];
 }>;
 
 
-export type GetAdByIdQuery = { __typename?: 'Query', getAdById: { __typename?: 'Ad', id: number, title: string, description: string, owner: string, price: number, location: string, createdAt: any, pictures: Array<{ __typename?: 'Picture', id: number, url: string }>, category: { __typename?: 'Category', id: number, title: string } } };
+export type GetAdByIdQuery = { __typename?: 'Query', getAdById: { __typename?: 'Ad', id: number, title: string, description: string, price: number, location: string, createdAt: any, user: { __typename?: 'User', email: string }, pictures: Array<{ __typename?: 'Picture', id: number, url: string }>, category: { __typename?: 'Category', id: number, title: string } } };
 
 export type LoginQueryVariables = Exact<{
   data: UserInput;
@@ -380,7 +435,6 @@ export const GetAllAdsDocument = gql`
     id
     title
     description
-    owner
     price
     location
     createdAt
@@ -439,8 +493,10 @@ export const GetAdByIdDocument = gql`
     id
     title
     description
-    owner
     price
+    user {
+      email
+    }
     pictures {
       id
       url

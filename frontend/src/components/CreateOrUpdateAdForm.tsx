@@ -18,7 +18,6 @@ const CreateOrUpdateAdForm = ({
   type Inputs = {
     title: string;
     description: string;
-    owner: string;
     price: string;
     pictures: { url: string; __typename?: string }[];
     location: string;
@@ -50,6 +49,7 @@ const CreateOrUpdateAdForm = ({
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log("data from react hook form", data);
+    const tags = Array.isArray(data.tags) ? data.tags : [data.tags];
     delete data.__typename;
     data.pictures = data.pictures.map((el) => {
       return { url: el.url };
@@ -58,7 +58,7 @@ const CreateOrUpdateAdForm = ({
       ...data,
       price: parseInt(data.price),
       createdAt: data.createdAt + "T00:00:00.000Z",
-      tags: data.tags ? data.tags.map((el) => ({ id: parseInt(el) })) : [],
+      tags: tags.map((el) => ({ id: parseInt(el) })),
     };
 
     // console.log("data for backend", dataForBackend);
@@ -119,36 +119,6 @@ const CreateOrUpdateAdForm = ({
             <ErrorMessage
               errors={errors}
               name="description"
-              render={({ messages }) =>
-                messages &&
-                Object.entries(messages).map(([type, message]) => {
-                  console.log(message);
-                  return (
-                    <Fragment key={type}>
-                      <br />
-                      <span className="error-message">{message}</span>
-                    </Fragment>
-                  );
-                })
-              }
-            />
-          </>
-          <br />
-          <>
-            <label>
-              Vendeur:
-              <br />
-              <input
-                className="text-field"
-                {...register("owner", {
-                  minLength: { value: 2, message: "Minimum 2 characters" },
-                  required: "This field is required",
-                })}
-              />
-            </label>
-            <ErrorMessage
-              errors={errors}
-              name="owner"
               render={({ messages }) =>
                 messages &&
                 Object.entries(messages).map(([type, message]) => {
@@ -351,8 +321,17 @@ const CreateOrUpdateAdForm = ({
           <br />
           <>
             {data.getAllTags.map((tag) => (
-              <label key={tag.id}>
-                <input type="checkbox" value={tag.id} {...register("tags")} />
+              <label key={tag.id} className="tagsContainer">
+                <input
+                  type="checkbox"
+                  value={tag.id}
+                  {...register("tags")}
+                  className="tags"
+                  defaultChecked={(defaultValues as Inputs).tags?.some(
+                    (defaultTag: string | number) =>
+                      defaultTag.toString() === tag.id.toString()
+                  )}
+                />
                 {tag.name}
               </label>
             ))}

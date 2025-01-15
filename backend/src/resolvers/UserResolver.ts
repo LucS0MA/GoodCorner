@@ -1,6 +1,5 @@
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import * as argon2 from "argon2";
-
 import jwt, { Secret } from "jsonwebtoken";
 import { User } from "../entities/User";
 import { UserInput } from "../inputs/UserInput";

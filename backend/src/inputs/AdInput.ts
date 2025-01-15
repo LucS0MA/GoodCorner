@@ -25,9 +25,6 @@ class AdInput implements Partial<Ad> {
   description: string;
 
   @Field()
-  owner: string;
-
-  @Field()
   price: number;
 
   @Field()
