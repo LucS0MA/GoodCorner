@@ -2,6 +2,7 @@ import "dotenv/config";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import jwt, { Secret } from "jsonwebtoken";
+import * as cookie from "cookie";
 import { dataSourceGoodCorner } from "./config/db";
 import { buildSchema } from "type-graphql";
 import AdResolver from "./resolvers/AdResolver";
@@ -34,17 +35,21 @@ const start = async () => {
   });
   const { url } = await startStandaloneServer(server, {
     listen: { port: 4000 },
-    context: async ({ req }) => {
-      const token = req.headers.authorization?.split("Bearer ")[1];
-      if (token !== undefined) {
-        const payload = jwt.verify(token, process.env.JWT_SECRET_KEY as Secret);
-        console.log("payload in context", payload);
-        if (payload) {
-          console.log("payload was found and returned to resolver");
-          return payload;
+    context: async ({ req, res }) => {
+      if (req.headers.cookie) {
+        const cookies = cookie.parse(req.headers.cookie as string);
+        if (cookies.token !== undefined) {
+          const payload: any = jwt.verify(
+            cookies.token,
+            process.env.JWT_SECRET_KEY as Secret
+          );
+          console.log("payload in context", payload);
+          if (payload) {
+            return { email: payload.email, res: res };
+          }
         }
       }
-      return {};
+      return { res: res };
     },
   });
 

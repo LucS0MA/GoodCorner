@@ -28,6 +28,9 @@ services:
       db:
         condition: service_healthy
   frontend:
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true 
     build: ./frontend
     volumes:
       - ./frontend/src:/app/src

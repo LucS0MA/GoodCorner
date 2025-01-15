@@ -1,4 +1,4 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import * as argon2 from "argon2";
 import jwt, { Secret } from "jsonwebtoken";
 import { User } from "../entities/User";
@@ -17,7 +17,7 @@ class UserResolver {
   }
 
   @Query(() => String)
-  async login(@Arg("data") loginUserData: UserInput) {
+  async login(@Arg("data") loginUserData: UserInput, @Ctx() context: any) {
     let isPasswordCorrect = false;
     const user = await User.findOneBy({ email: loginUserData.email });
     if (user) {
@@ -31,7 +31,8 @@ class UserResolver {
         { email: user.email },
         process.env.JWT_SECRET_KEY as Secret
       );
-      return token;
+      context.res.setHeader("Set-Cookie", `token=${token}; Secure; HttpOnly`);
+      return "ok";
     } else {
       throw new Error("Incorrect login");
     }

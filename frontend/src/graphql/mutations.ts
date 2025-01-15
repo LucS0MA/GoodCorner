@@ -19,3 +19,9 @@ export const UPDATE_AD_BY_ID = gql`
     updateAd(data: $data)
   }
 `;
+
+export const REGISTER = gql`
+  mutation Register($data: UserInput!) {
+    register(data: $data)
+  }
+`;
