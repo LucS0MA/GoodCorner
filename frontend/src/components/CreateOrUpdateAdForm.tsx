@@ -25,6 +25,7 @@ const CreateOrUpdateAdForm = ({
     category: string;
     tags: string[];
     __typename?: string;
+    user?: any;
   };
 
   const {
@@ -54,19 +55,15 @@ const CreateOrUpdateAdForm = ({
     data.pictures = data.pictures.map((el) => {
       return { url: el.url };
     });
+    const { user, ...dataWithoutUser } = data;
     const dataForBackend = {
-      ...data,
+      ...dataWithoutUser,
       price: parseInt(data.price),
       createdAt: data.createdAt + "T00:00:00.000Z",
-      tags: tags.map((tag) => {
-        if (typeof tag === "string" || typeof tag === "number") {
-          return { id: parseInt(tag.toString()) }; // Ensure valid ID
-        }
-        return tag;
-      })
+      tags: tags.map((el) => ({ id: parseInt(el) })),
     };
 
-    // console.log("data for backend", dataForBackend);
+    console.log("data for backend", dataForBackend);
     await submitToBackend({ variables: { data: dataForBackend } });
     toast.success("Succes");
     navigate("/");

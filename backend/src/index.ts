@@ -21,9 +21,18 @@ const start = async () => {
 
   const schema = await buildSchema({
     resolvers: [AdResolver, CategoryResolver, TagResolver, UserResolver],
-    authChecker: ({ context }) => {
+    authChecker: ({ context }, rolesForOperation) => {
+      console.log("roles for this query / mutation", rolesForOperation);
       if (context.email) {
-        return true;
+        if (rolesForOperation.length === 0) {
+          return true;
+        } else {
+          if (rolesForOperation.includes(context.userRole)) {
+            return true;
+          } else {
+            return false;
+          }
+        }
       } else {
         return false;
       }
@@ -45,7 +54,11 @@ const start = async () => {
           );
           console.log("payload in context", payload);
           if (payload) {
-            return { email: payload.email, res: res };
+            return {
+              email: payload.email,
+              userRole: payload.userRole,
+              res: res,
+            };
           }
         }
       }
