@@ -9,6 +9,7 @@ import AdResolver from "./resolvers/AdResolver";
 import CategoryResolver from "./resolvers/CategoryResolver";
 import TagResolver from "./resolvers/TagResolver";
 import UserResolver from "./resolvers/UserResolver";
+import TempUserResolver from "./resolvers/TempUserResolver";
 
 const start = async () => {
   if (
@@ -20,7 +21,7 @@ const start = async () => {
   await dataSourceGoodCorner.initialize();
 
   const schema = await buildSchema({
-    resolvers: [AdResolver, CategoryResolver, TagResolver, UserResolver],
+    resolvers: [AdResolver, CategoryResolver, TagResolver, UserResolver, TempUserResolver],
     authChecker: ({ context }, rolesForOperation) => {
       console.log("roles for this query / mutation", rolesForOperation);
       if (context.email) {

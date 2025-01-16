@@ -11,6 +11,7 @@ import * as argon2 from "argon2";
 import jwt, { Secret } from "jsonwebtoken";
 import { User } from "../entities/User";
 import { UserInput } from "../inputs/UserInput";
+import { TempUser } from "../entities/TempUser";
 
 @ObjectType()
 class UserInfo {
@@ -28,6 +29,11 @@ class UserResolver {
     const result = await User.save({
       email: newUserData.email,
       hashedPassword: await argon2.hash(newUserData.password),
+    });
+    await TempUser.save({
+      randomCode: Math.floor(100000 + Math.random() * 900000),
+      user: result,
+      userId: result.id
     });
     console.log("result", result);
     return "The user was created";
