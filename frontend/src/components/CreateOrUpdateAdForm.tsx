@@ -58,7 +58,12 @@ const CreateOrUpdateAdForm = ({
       ...data,
       price: parseInt(data.price),
       createdAt: data.createdAt + "T00:00:00.000Z",
-      tags: tags.map((el) => ({ id: parseInt(el) })),
+      tags: tags.map((tag) => {
+        if (typeof tag === "string" || typeof tag === "number") {
+          return { id: parseInt(tag.toString()) }; // Ensure valid ID
+        }
+        return tag;
+      })
     };
 
     // console.log("data for backend", dataForBackend);

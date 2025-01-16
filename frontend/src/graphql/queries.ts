@@ -1,14 +1,5 @@
 import { gql } from "@apollo/client";
 
-export const GET_ALL_CATEGORIES = gql`
-  query GetAllCategories {
-    getAllCategories {
-      id
-      title
-    }
-  }
-`;
-
 export const GET_ALL_CATEGORIES_AND_TAGS = gql`
   query GetAllCategoriesAndTags {
     getAllCategories {
@@ -71,8 +62,24 @@ export const GET_AD_BY_ID = gql`
   }
 `;
 
-export const LOGIN = gql`
-  query Login($data: UserInput!) {
-    login(data: $data)
+export const GET_USER_INFO = gql`
+  query GetUserInfo {
+    getUserInfo {
+      isLoggedIn
+      email
+    }
+  }
+`;
+
+export const GET_ALL_CATEGORIES_AND_USER_INFO = gql`
+  query GetAllCategoriesAndUserInfo {
+    getAllCategories {
+      id
+      title
+    }
+    getUserInfo {
+      isLoggedIn
+      email
+    }
   }
 `;

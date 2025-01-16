@@ -14,6 +14,18 @@ export const DELETE_AD_BY_ID = gql`
   }
 `;
 
+export const LOGIN = gql`
+  mutation Login($data: UserInput!) {
+    login(data: $data)
+  }
+`;
+
+export const LOGOUT = gql`
+  mutation Logout {
+    logout
+  }
+`;
+
 export const UPDATE_AD_BY_ID = gql`
   mutation UpdateAdById($data: UpdateAdInput!) {
     updateAd(data: $data)
