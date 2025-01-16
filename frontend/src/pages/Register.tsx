@@ -20,7 +20,7 @@ const RegisterPage = () => {
       variables: { data: { email: data.login, password: data.password } },
       onCompleted: (result) => {
         console.log("result", result);
-        navigate("/login");
+        navigate("/");
       },
       onError: (error) => {
         console.log("error", error);
