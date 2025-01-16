@@ -55,6 +55,7 @@ export type CategoryInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  confirmEmail: Scalars['String']['output'];
   createNewAd: Ad;
   createNewCategory: Category;
   createNewTag: Tag;
@@ -65,6 +66,11 @@ export type Mutation = {
   register: Scalars['String']['output'];
   updateAd: Scalars['String']['output'];
   updateCategory: Scalars['String']['output'];
+};
+
+
+export type MutationConfirmEmailArgs = {
+  codeByUser: Scalars['String']['input'];
 };
 
 
@@ -128,8 +134,10 @@ export type Query = {
   getAllAds: Array<Ad>;
   getAllCategories: Array<Category>;
   getAllTags: Array<Tag>;
+  getAllTempsUsers: Array<TempUser>;
   getCategoryById: Category;
   getTagById: Tag;
+  getTempUserById: TempUser;
   getUserInfo: UserInfo;
 };
 
@@ -154,6 +162,11 @@ export type QueryGetTagByIdArgs = {
   id: Scalars['Float']['input'];
 };
 
+
+export type QueryGetTempUserByIdArgs = {
+  id: Scalars['Float']['input'];
+};
+
 export type Tag = {
   __typename?: 'Tag';
   id: Scalars['Float']['output'];
@@ -167,6 +180,12 @@ export type TagInput = {
 export type TagInputs = {
   id: Scalars['Float']['input'];
   name: Scalars['String']['input'];
+};
+
+export type TempUser = {
+  __typename?: 'TempUser';
+  email: Scalars['String']['output'];
+  randomCode: Scalars['String']['output'];
 };
 
 export type UpDateCategoryInput = {
@@ -242,6 +261,13 @@ export type RegisterMutationVariables = Exact<{
 
 
 export type RegisterMutation = { __typename?: 'Mutation', register: string };
+
+export type ConfirmEmailMutationVariables = Exact<{
+  codeByUser: Scalars['String']['input'];
+}>;
+
+
+export type ConfirmEmailMutation = { __typename?: 'Mutation', confirmEmail: string };
 
 export type GetAllCategoriesAndTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -461,6 +487,37 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const ConfirmEmailDocument = gql`
+    mutation ConfirmEmail($codeByUser: String!) {
+  confirmEmail(codeByUser: $codeByUser)
+}
+    `;
+export type ConfirmEmailMutationFn = Apollo.MutationFunction<ConfirmEmailMutation, ConfirmEmailMutationVariables>;
+
+/**
+ * __useConfirmEmailMutation__
+ *
+ * To run a mutation, you first call `useConfirmEmailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useConfirmEmailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [confirmEmailMutation, { data, loading, error }] = useConfirmEmailMutation({
+ *   variables: {
+ *      codeByUser: // value for 'codeByUser'
+ *   },
+ * });
+ */
+export function useConfirmEmailMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmEmailMutation, ConfirmEmailMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ConfirmEmailMutation, ConfirmEmailMutationVariables>(ConfirmEmailDocument, options);
+      }
+export type ConfirmEmailMutationHookResult = ReturnType<typeof useConfirmEmailMutation>;
+export type ConfirmEmailMutationResult = Apollo.MutationResult<ConfirmEmailMutation>;
+export type ConfirmEmailMutationOptions = Apollo.BaseMutationOptions<ConfirmEmailMutation, ConfirmEmailMutationVariables>;
 export const GetAllCategoriesAndTagsDocument = gql`
     query GetAllCategoriesAndTags {
   getAllCategories {

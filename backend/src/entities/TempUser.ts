@@ -3,11 +3,8 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { User } from "./User";
 
 @ObjectType()
 @Entity()
@@ -17,15 +14,13 @@ export class TempUser extends BaseEntity {
 
   @Field()
   @Column()
-  randomCode: number;
-
-  @Field(() => User)
-  @OneToOne(() => User)
-  @JoinColumn()
-  user: User;
+  randomCode: string;
 
   @Field()
   @Column()
-  userId: number;
+  email: string;
+
+  @Column()
+  hashedPassword: string;
 
 }

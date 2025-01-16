@@ -15,6 +15,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 import UpdateAdPage from "./pages/UpdateAdPage";
 import SingleFileUploader from "./pages/TestFileUpload";
 import RegisterPage from "./pages/Register";
+import ConfirmEmailPage from "./pages/ConfirmEmail";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="counter" element={<CounterPage />} />
           <Route path="testimg" element={<SingleFileUploader />} />
           <Route path="register" element={<RegisterPage />} />
+          <Route path="confirm/:code?" element={<ConfirmEmailPage />} />
         </Route>
       </Routes>
       <ToastContainer theme="colored" />

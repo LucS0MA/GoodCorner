@@ -4,11 +4,9 @@ import {
   Column,
   Entity,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Ad } from "./Ad";
-import { TempUser } from "./TempUser";
 
 @ObjectType()
 @Entity()
@@ -22,9 +20,6 @@ export class User extends BaseEntity {
 
   @Column()
   hashedPassword: string;
-
-  @OneToOne(() => TempUser, tempUser => tempUser.user)
-  tempUser: TempUser;
 
   @Column({default: "USER"})
   role: string;

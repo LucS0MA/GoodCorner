@@ -9,6 +9,8 @@ import {
 } from "type-graphql";
 import * as argon2 from "argon2";
 import jwt, { Secret } from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
+import { Resend } from "resend";
 import { User } from "../entities/User";
 import { UserInput } from "../inputs/UserInput";
 import { TempUser } from "../entities/TempUser";
@@ -26,15 +28,33 @@ class UserInfo {
 class UserResolver {
   @Mutation(() => String)
   async register(@Arg("data") newUserData: UserInput) {
-    const result = await User.save({
+    const randomCode = uuidv4();
+    const result = await TempUser.save({
       email: newUserData.email,
       hashedPassword: await argon2.hash(newUserData.password),
+      randomCode: randomCode,
     });
-    await TempUser.save({
-      randomCode: Math.floor(100000 + Math.random() * 900000),
-      user: result,
-      userId: result.id
-    });
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    (async function () {
+      const { data, error } = await resend.emails.send({
+        from: "Acme <onboarding@resend.dev>",
+        to: [newUserData.email],
+        subject: "Verify Email",
+        html: `
+          <p>Please click the link below to confirm your email address</p>
+          <a href="http://localhost:7000/confirm/${randomCode}">
+            http://localhost:7000/confirm/${randomCode}
+          </a>
+          `,
+      });
+
+      if (error) {
+        return console.error({ error });
+      }
+
+      console.log({ data });
+    })();
     console.log("result", result);
     return "The user was created";
   }
@@ -77,6 +97,17 @@ class UserResolver {
     } else {
       return { isLoggedIn: false };
     }
+  }
+
+  @Mutation(() => String)
+  async confirmEmail(@Arg("codeByUser") codeByUser: string) {
+    const tempUser = await TempUser.findOneByOrFail({ randomCode: codeByUser });
+    await User.save({
+      email: tempUser.email,
+      hashedPassword: tempUser.hashedPassword,
+    });
+    tempUser.remove();
+    return "ok";
   }
 }
 
