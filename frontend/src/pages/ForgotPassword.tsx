@@ -30,16 +30,22 @@ const ForgotPassword = () => {
   };
 
   return (
+    <>
+    <h2>Réinitialiser son mot de passe</h2>
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input
-        defaultValue={"john.doe@gmail.com"}
-        placeholder="email"
-        {...register("email", { required: true })}
-      />
-      {errors.email && <span>This field is required</span>}
+      <div className="formContent">
+        <input
+          className="inputForm"
+          defaultValue={"john.doe@gmail.com"}
+          placeholder="email"
+          {...register("email", { required: true })}
+        />
+        {errors.email && <span>This field is required</span>}
 
-      <input type="submit" />
+        <input type="submit" />
+      </div>
     </form>
+    </>
   );
 };
 

@@ -31,7 +31,10 @@ const ChangePassword = () => {
   };
 
   return (
+    <>
+    <h2>Changement de mot de passe</h2>
     <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="formContent">
       <input
         className="invisible"
         defaultValue={code}
@@ -42,6 +45,7 @@ const ChangePassword = () => {
 
       <input type="submit" className="invisible" />
       <input
+        className="inputForm"
         defaultValue={"New password"}
         placeholder="New password"
         type="password"
@@ -50,7 +54,9 @@ const ChangePassword = () => {
       {errors.newPassword && <span>This field is required</span>}
 
       <input type="submit" />
+      </div>
     </form>
+    </>
   );
 };
 

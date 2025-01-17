@@ -30,8 +30,12 @@ const ConfirmEmailPage = () => {
     });
   };
   return (
+    <>
+    <h2>Confirmation de l'adresse mail</h2>
     <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="formContent">
       <input
+        className="inputForm"
         defaultValue={code}
         placeholder="code"
         {...register("code", { required: true })}
@@ -39,7 +43,9 @@ const ConfirmEmailPage = () => {
       {errors.code && <span>This field is required</span>}
 
       <input type="submit" />
+      </div>
     </form>
+    </>
   );
 };
 
