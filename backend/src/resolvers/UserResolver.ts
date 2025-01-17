@@ -103,6 +103,13 @@ class UserResolver {
   @Mutation(() => String)
   async confirmEmail(@Arg("codeByUser") codeByUser: string) {
     const tempUser = await TempUser.findOneByOrFail({ randomCode: codeByUser });
+    const miliseconds = Date.now() - Date.parse(tempUser.created_at.toUTCString())
+    const minutes = miliseconds / 1000 / 60;
+    console.log("minutes", minutes);
+    if (minutes > 45) {
+      tempUser.remove();
+      throw Error("The link has expired")
+    }
     await User.save({
       email: tempUser.email,
       hashedPassword: tempUser.hashedPassword,
@@ -155,6 +162,13 @@ class UserResolver {
     const newPasswordEntry = await ForgotPassword.findOneByOrFail({
       randomCode: codeByUser,
     });
+    const miliseconds = Date.now() - Date.parse(newPasswordEntry.created_at.toUTCString())
+    const minutes = miliseconds / 1000 / 60;
+    console.log("minutes", minutes);
+    if (minutes > 5) {
+      newPasswordEntry.remove();
+      throw Error("The link has expired")
+    }
     const user = await User.findOneBy({ email: newPasswordEntry.email });
     if (!user) {
       throw new Error("User not found");

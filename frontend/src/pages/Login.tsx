@@ -41,13 +41,22 @@ const LoginPage = ({
     setShowLogin(false); 
     navigate("/forgotPassword"); 
   };
+
+  const handleCloseModal = (e: any) => {
+    e.preventDefault(); 
+    setShowLogin(false); 
+  };
   
 
   return (
     <div className="loginModalContainer">
       <div className="loginModalContent">
+        <div className="headerModal">
         <h2>Login</h2>
+        <button onClick={handleCloseModal}>X</button>
+        </div>
         <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="formContent">
           <input
             defaultValue={"john.doe@gmail.com"}
             placeholder="email"
@@ -63,8 +72,11 @@ const LoginPage = ({
           />
           {errors.password && <span>This field is required</span>}
 
-          <input type="submit" />
+          <input type="submit"  className="submitModal"/>
+          </div>
+          <div className="forgot">
           <Link to="/forgotPassword" onClick={handleLinkClick}>Mot de passe oublié ?</Link>
+          </div>
         </form>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { Field, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -23,4 +24,6 @@ export class TempUser extends BaseEntity {
   @Column()
   hashedPassword: string;
 
+  @CreateDateColumn()
+  created_at: Date;
 }

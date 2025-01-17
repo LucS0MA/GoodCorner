@@ -17,6 +17,24 @@ h1 {
   visibility: hidden;
 }
 
+.formContent {
+  gap: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.forgot {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.headerModal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .loginModalContainer {
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
@@ -27,13 +45,16 @@ h1 {
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  border: 2px solid #ffa41b;
 }
 .loginModalContent {
   background-color: #fefefe;
   margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
   border: 1px solid #888;
-  width: 60%; /* Could be more or less, depending on screen size */
+  border: 2px solid #ffa41b;
+  border-radius: 12px;
+  width: 30%; /* Could be more or less, depending on screen size */
 }
 
 .header {
@@ -59,7 +80,8 @@ h1 {
   color: #666;
   padding: 16px 10px 6px;
   white-space: nowrap;
-  overflow-x: scroll;
+  display: flex;
+  justify-content: space-around;
 }
 
 .category-navigation-link {
