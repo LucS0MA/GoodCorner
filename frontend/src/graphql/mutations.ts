@@ -43,3 +43,15 @@ export const CONFIRM_EMAIL = gql`
     confirmEmail(codeByUser: $codeByUser)
   }
 `;
+
+export const CONFIRM_PASSWORD = gql`
+  mutation ConfirmPassword($newPassword: String!, $codeByUser: String!) {
+    confirmPassword(newPassword: $newPassword, codeByUser: $codeByUser)
+  }
+`;
+
+export const PASSWORD_RESET = gql`
+  mutation PasswordReset($email: String!) {
+    passwordReset(email: $email)
+  }
+`;

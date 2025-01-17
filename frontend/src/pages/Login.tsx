@@ -1,6 +1,6 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useLoginMutation } from "../generated/graphql-types";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GET_USER_INFO } from "../graphql/queries";
 
 const LoginPage = ({
@@ -36,6 +36,13 @@ const LoginPage = ({
     });
   };
 
+  const handleLinkClick = (e: any) => {
+    e.preventDefault(); 
+    setShowLogin(false); 
+    navigate("/forgotPassword"); 
+  };
+  
+
   return (
     <div className="loginModalContainer">
       <div className="loginModalContent">
@@ -57,6 +64,7 @@ const LoginPage = ({
           {errors.password && <span>This field is required</span>}
 
           <input type="submit" />
+          <Link to="/forgotPassword" onClick={handleLinkClick}>Mot de passe oublié ?</Link>
         </form>
       </div>
     </div>

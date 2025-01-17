@@ -13,6 +13,10 @@ h1 {
   margin: 0;
 }
 
+.invisible {
+  visibility: hidden;
+}
+
 .loginModalContainer {
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */

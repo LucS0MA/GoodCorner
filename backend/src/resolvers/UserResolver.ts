@@ -14,6 +14,7 @@ import { Resend } from "resend";
 import { User } from "../entities/User";
 import { UserInput } from "../inputs/UserInput";
 import { TempUser } from "../entities/TempUser";
+import { ForgotPassword } from "../entities/ForgotPassword";
 
 @ObjectType()
 class UserInfo {
@@ -107,6 +108,61 @@ class UserResolver {
       hashedPassword: tempUser.hashedPassword,
     });
     tempUser.remove();
+    return "ok";
+  }
+
+  @Mutation(() => String)
+  async passwordReset(@Arg("email") userEmail: string) {
+    const user = await User.findOneBy({ email: userEmail });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const randomCode = uuidv4();
+    const result = await ForgotPassword.save({
+      email: user.email,
+      randomCode: randomCode,
+    });
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    (async function () {
+      const { data, error } = await resend.emails.send({
+        from: "Acme <onboarding@resend.dev>",
+        to: [user.email],
+        subject: "Verify Email",
+        html: `
+          <p>Please click the link below to confirm your email address</p>
+          <a href="http://localhost:7000/changePassword/${randomCode}">
+            http://localhost:7000/changePassword/${randomCode}
+          </a>
+          `,
+      });
+
+      if (error) {
+        return console.error({ error });
+      }
+
+      console.log({ data });
+    })();
+    console.log("result", result);
+    return "Email sent";
+  }
+
+  @Mutation(() => String)
+  async confirmPassword(
+    @Arg("codeByUser") codeByUser: string,
+    @Arg("newPassword") newPassword: string
+  ) {
+    const newPasswordEntry = await ForgotPassword.findOneByOrFail({
+      randomCode: codeByUser,
+    });
+    const user = await User.findOneBy({ email: newPasswordEntry.email });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const newhashedPassword = await argon2.hash(newPassword);
+    user.hashedPassword = newhashedPassword;
+    await user.save();
+    await newPasswordEntry.remove();
     return "ok";
   }
 }

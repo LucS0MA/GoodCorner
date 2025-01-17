@@ -16,6 +16,8 @@ import UpdateAdPage from "./pages/UpdateAdPage";
 import SingleFileUploader from "./pages/TestFileUpload";
 import RegisterPage from "./pages/Register";
 import ConfirmEmailPage from "./pages/ConfirmEmail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ChangePassword from "./pages/ChangePassword";
 
 function App() {
   return (
@@ -35,6 +37,8 @@ function App() {
           <Route path="testimg" element={<SingleFileUploader />} />
           <Route path="register" element={<RegisterPage />} />
           <Route path="confirm/:code?" element={<ConfirmEmailPage />} />
+          <Route path="forgotPassword" element={<ForgotPassword />} />
+          <Route path="changePassword/:code?" element={<ChangePassword/>} />
         </Route>
       </Routes>
       <ToastContainer theme="colored" />
